@@ -1,0 +1,1 @@
+# Telchat - Telthar's LAN chat client
