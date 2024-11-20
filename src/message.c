@@ -40,40 +40,6 @@ message_t *msg_setChunk(message_t *in, uint64_t chnk) {
     return in;
 }
 
-//void msg_sendfile(message_t *in, SOCKET msock, FILE *file) {
-//    fseek(file, 0L, SEEK_END);
-//    uint32_t fsize = ftell(file);
-//    rewind(file);
-//
-//    uint32_t chunkSize = fsize / (MT_MAX_BODY * sizeof(wchar_t));
-//    uint32_t remainingChunk = fsize % (MT_MAX_BODY * sizeof(wchar_t));
-//    
-//
-//    printf("DEBUG: CHUNK=%llu REM=%llu\n", chunkSize, remainingChunk);
-//
-//    message_t *begin = msg_makeraw();
-//    begin = msg_setType(begin, INFO_DATA_BEGIN);
-//    begin = msg_addbody(begin, )
-//    send(msock, (char*)begin, sizeof(message_t), 0);
-//    free(begin);
-//
-//    for (uint32_t ch = 0; ch < chunkSize; ch++) {
-//        message_t *msg = msg_makeraw();
-//        msg = msg_setflag(msg, INFO_DATA);
-//        
-//        uint64_t tmpck = (chunkSize << 32);
-//        tmpck |= ch;
-//        printf("UP=%08x LW=%08x\n", (tmpck >> 32), (tmpck & 0xFFFFFFFF));
-//
-//        msg = msg_setChunk(msg, tmpck);
-//        fread(msg->wsr_body, 1, MT_MAX_BODY * sizeof(wchar_t), file);
-//        send(msock, (char*)msg, sizeof(message_t), 0);
-//    }
-//    printf("END\n");
-//
-//}
-
-
 void msg_sendfile(SOCKET msock, LPCWSTR filename) {
     HANDLE hFile = CreateFileW(
         filename,                

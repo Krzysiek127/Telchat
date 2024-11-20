@@ -46,6 +46,7 @@ typedef struct {
 #define INFO_RXPING     9
 
 #define INFO_BROADCAST  10
+#define INFO_PTY        11
 
 #define FOREGROUND_DEFAULT  (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE)
 

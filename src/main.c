@@ -63,35 +63,18 @@ int main(int argc, char *argv[]) {
     GetConsoleScreenBufferInfo(hOutput, &s);
     clear_terminal();
     
+    SetConsoleTitleW(L"Telchat Alpha 1.0");
 
-    //printf("\n\nTelthar Internet LAN Chat\nVersion Alpha 1.0, Protocol Version %u\n", PROTO_VERSION);
-//
-    //if (_access("config.bin", F_OK) != 0) {
-    //    config.us_dataport = 2005;
-    //    config.us_broadport = 2007;
-    //    
-    //    printf("New username (max. 24 chars)> ");
-    //    fgetws(config.wsr_username, MT_MAX_USERNAME, stdin);
-//
-    //    FILE *fwconf = fopen("config.bin", "wb");
-    //    fwrite(&config, sizeof(struct configuration), 1, fwconf);
-    //    fclose(fwconf);
-    //}
-//
-    //FILE *frconf = fopen("config.bin", "rb");
-    //fread(&config, sizeof(struct configuration), 1, frconf);
-    //fclose(frconf);
-
-    cursor(FALSE);
-    
+    printf("\n\nTelthar Internet LAN Chat\nVersion Alpha 1.0, Protocol Version %u\n", PROTO_VERSION);
     srand(time(NULL));
 
     // TODO: Username set
     wcscpy(wsr_current_user, L"Krzysiek");
+
     setlocale( LC_ALL, ".UTF8" );
 
     /* Winsock init part */
-
+    cursor(FALSE);
     if (WSAStartup( MAKEWORD(2, 2), &wsaData ) != NO_ERROR)
         TIRCriticalError(L"Initialization error");
 
@@ -204,7 +187,10 @@ int client(unsigned long ADDR, u_short PORT) {
     u_long mode = 1;
     ioctlsocket(mainSocket, FIONBIO, &mode);
 
-    connmsg = msg_makeraw(); //make_empty_flagged(INFO_CONNECT);
+
+
+
+    connmsg = msg_makeraw();
     connmsg = msg_setType(connmsg, INFO_CONNECT);
     send(mainSocket, (char*)connmsg, sizeof(message_t), 0);
     free(connmsg);
@@ -214,7 +200,7 @@ int client(unsigned long ADDR, u_short PORT) {
         
         /* Key input segment */
         if (_kbhit()) {
-            wc_get = (wchar_t) _getwche();
+            wc_get = (wchar_t) _getwch();
             
             /* Add escape codes */
 
@@ -326,7 +312,6 @@ int client(unsigned long ADDR, u_short PORT) {
 
         switch (rcvmsg->uc_type) {
         case INFO_TEXT:
-            swprintf(wsr_toastbuffer, TOAST_LENGTH, L"User=%ls, Recp=%ls", rcvmsg->wsr_username, rcvmsg->wsr_address);
             scroll_queue(rcvmsg);
             clear_terminal();
             break;
@@ -343,8 +328,11 @@ int client(unsigned long ADDR, u_short PORT) {
                     NULL                     // No template
                 );
 
-                if (hRecvf == INVALID_HANDLE_VALUE)
+                if (hRecvf == INVALID_HANDLE_VALUE) {
                     MessageBoxW(NULL, L"Could not create file", L"File error", 0);
+                    shouldDownload = FALSE;
+                }
+                    
             }
             goto end_of_render;
         case INFO_DATA:
@@ -361,7 +349,8 @@ int client(unsigned long ADDR, u_short PORT) {
             goto end_of_render;
         case INFO_DATA_ERROR:
             swprintf(wsr_toastbuffer, TOAST_LENGTH, L"Transfer error.");
-            CloseHandle(hRecvf);
+            if (hRecvf != INVALID_HANDLE_VALUE)
+                CloseHandle(hRecvf);
             goto end_of_render;
         
         case INFO_CONNECT:

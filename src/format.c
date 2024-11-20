@@ -40,8 +40,8 @@ int mesprintf(message_t *msg) {
                         wTextAttr = 0;
                         shouldRender = TRUE;
                         continue;
-                    case L'*':
-                        // Extended 4 letter commands
+                    case L'P':
+                        printf("\a");
                         break;
 
                     case L'>':

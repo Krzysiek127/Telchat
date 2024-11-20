@@ -16,5 +16,7 @@
 #include <winsock2.h>
 #include <windows.h>
 
+
+#include "siema_kto_pl.h"
 #define MIN(a,b) (((a)<(b))?(a):(b))
 void TIRCriticalError(wchar_t *text);
